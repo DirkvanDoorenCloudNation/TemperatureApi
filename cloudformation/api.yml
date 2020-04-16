@@ -4,3 +4,15 @@ Resources:
     Properties:     
       Name: TemperaturesApi
       
+  currenttempincovilhaResource:
+    Type: AWS::ApiGateway::Resource
+    Properties: 
+      ParentId: !GetAtt ApiGateway.RootResourceId
+      PathPart: currenttempincovilha
+      RestApiId: !Ref ApiGateway
+  avgtempinsfaxResource:
+    Type: AWS::ApiGateway::Resource
+    Properties: 
+      ParentId: !GetAtt ApiGateway.RootResourceId
+      PathPart: avgtempinsfax
+      RestApiId: !Ref ApiGateway
