@@ -25,7 +25,7 @@
 				},
 				"FunctionName" : {"Ref": "functionName"},
 				"Handler" : "index.handler",
-				"Role" : {"Ref": "LambdaExecutionRole"},
+				"Role" : {"Fn::GetAtt": ["LambdaExecutionRole", "Arn"]},
 				"Runtime" : "nodejs12.x"
 			  }
 		  },
