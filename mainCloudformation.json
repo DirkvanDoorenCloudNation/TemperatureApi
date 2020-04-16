@@ -36,7 +36,10 @@
         "ApiStack":{
             "Type": "AWS::CloudFormation::Stack",
             "Properties":{
-                "TemplateURL": {"Fn::Sub": "${deploymentBucket}/cloudformation/api.yml"}
+                "TemplateURL": {"Fn::Sub": "${deploymentBucket}/cloudformation/api.yml"},
+                "Parameters":{
+                    "lambdaArn": {"Fn::GetAtt":["LambdaStack", "Outputs.Arn"]}
+                }
             }
         }
     }

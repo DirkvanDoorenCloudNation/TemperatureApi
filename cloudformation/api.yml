@@ -1,18 +1,45 @@
+Parameters:
+  lambdaArn: 
+    Type: String
 Resources:
+  ########## API GATEWAY ##########
   ApiGateway:
     Type: AWS::ApiGateway::RestApi
     Properties:     
       Name: TemperaturesApi
-      
+  ######### RESOURCES ############    
   currenttempincovilhaResource:
     Type: AWS::ApiGateway::Resource
     Properties: 
       ParentId: !GetAtt ApiGateway.RootResourceId
       PathPart: currenttempincovilha
       RestApiId: !Ref ApiGateway
+  
   avgtempinsfaxResource:
     Type: AWS::ApiGateway::Resource
     Properties: 
       ParentId: !GetAtt ApiGateway.RootResourceId
       PathPart: avgtempinsfax
       RestApiId: !Ref ApiGateway
+
+  ######## METHODS ##############
+  currenttempincovilhaMethod:
+    Type: AWS::ApiGateway::Resource
+    Properies:
+      ApiKeyRequired: False
+      AuthorizationType: "NONE"
+      HttpMethod: GET
+      Integration: 
+        IntegrationHttpMethod: POST
+        IntegrationResponses: 
+          - IntegrationResponse
+        PassthroughBehavior: String
+        Type: AWS 
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        
+
+
+
+      ResourceId: !Ref currenttempincovilhaResource
+      RestApiId: !Ref ApiGateway
+  
