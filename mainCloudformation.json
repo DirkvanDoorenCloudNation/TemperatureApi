@@ -13,11 +13,11 @@
         },
         "deploymentBucket":{
             "Type": "String",
-            "Default": "https://frontendpipeline-unpacks3-16ctx7w0ad32g.s3-eu-west-1.amazonaws.com"
+            "Default": "https://vopak-testpipeline-unpacks3-v05y51x3vibx.s3-eu-west-1.amazonaws.com"
         },
         "deploymentBucketName":{
             "Type": "String",
-            "Default": "frontendpipeline-unpacks3-16ctx7w0ad32g"
+            "Default": "vopak-testpipeline-unpacks3-v05y51x3vibx"
         }
     },
     "Resources": {
