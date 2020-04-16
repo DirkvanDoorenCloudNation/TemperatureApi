@@ -25,7 +25,7 @@ Resources:
   ######## METHODS ##############
   currenttempincovilhaMethod:
     Type: AWS::ApiGateway::Resource
-    Properies:
+    Properties:
       ApiKeyRequired: False
       AuthorizationType: "NONE"
       HttpMethod: GET
@@ -35,4 +35,15 @@ Resources:
         Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
       ResourceId: !Ref currenttempincovilhaResource
       RestApiId: !Ref ApiGateway
-  
+  avgtempinsfaxMethod:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ApiKeyRequired: False
+      AuthorizationType: "NONE"
+      HttpMethod: GET
+      Integration: 
+        IntegrationHttpMethod: POST
+        Type: AWS 
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+      ResourceId: !Ref avgtempinsfaxResource
+      RestApiId: !Ref ApiGateway
