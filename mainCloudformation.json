@@ -24,7 +24,7 @@
         "LambdaStack":{
             "Type": "AWS::CloudFormation::Stack",
             "Properties":{
-                "TemplateURL": {"Fn::Sub": "${deploymentBucket}/cloudformation/lambda.json"},
+                "TemplateURL": {"Fn::Sub": "s3://${deploymentBucketName}/cloudformation/lambda.json"},
                 "Parameters":{
                     "functionVersion":{"Ref": "functionVersion"},
                     "functionName":{"Ref": "functionName"},
@@ -36,7 +36,7 @@
         "ApiStack":{
             "Type": "AWS::CloudFormation::Stack",
             "Properties":{
-                "TemplateURL": {"Fn::Sub": "${deploymentBucket}/cloudformation/api.yml"}
+                "TemplateURL": {"Fn::Sub": "s3://${deploymentBucketName}/cloudformation/api.yml"}
             }
         }
     }
