@@ -24,7 +24,7 @@
         "LambdaStack":{
             "Type": "AWS::CloudFormation::Stack",
             "Properties":{
-                "TemplateURL": "https://vopak-testpipeline-unpacks3-v05y51x3vibx.s3-eu-west-1.amazonaws.com/cloudformation/lambda.json",
+                "TemplateURL": {"Fn::Sub": "${deploymentBucket}/cloudformation/lambda.json"},
                 "Parameters":{
                     "functionVersion":{"Ref": "functionVersion"},
                     "functionName":{"Ref": "functionName"},
@@ -36,7 +36,7 @@
         "ApiStack":{
             "Type": "AWS::CloudFormation::Stack",
             "Properties":{
-                "TemplateURL": "https://vopak-testpipeline-unpacks3-v05y51x3vibx.s3-eu-west-1.amazonaws.com/cloudformation/api.yml"
+                "TemplateURL": {"Fn::Sub": "${deploymentBucket}/cloudformation/api.yml"}
             }
         }
     }

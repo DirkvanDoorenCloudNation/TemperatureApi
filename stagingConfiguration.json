@@ -2,8 +2,6 @@
     "Parameters":{
         "stage":"staging",
         "functionVersion": "0.0.1",
-        "functionName":"",
-        "deploymentBucket":"",
-        "deploymentBucketName":""
+        "functionName":"currenttemperatureLambda"
     }
 }
