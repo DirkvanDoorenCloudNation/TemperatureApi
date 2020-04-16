@@ -1,0 +1,14 @@
+{
+  "name": "currenttemperaturlambda",
+  "version": "1.0.0",
+  "description": "returns current temperature in Covilha",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "Dirk van Dooren",
+  "license": "ISC"
+}

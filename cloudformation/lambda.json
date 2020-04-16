@@ -1,0 +1,81 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Lambda resource stack creation using Amplify CLI",
+	"Parameters": {
+        "deploymentBucketName":{
+            "Type": "String"
+        },
+        "functionVersion":{
+            "Type": "String"
+		},
+		"functionName":{
+			"Type": "String"
+		},
+		"stage":{
+			"Type": "String"
+		}
+	},
+	"Resources": {
+		"LambdaFunction": {
+			"Type" : "AWS::Lambda::Function",
+			"Properties" : {
+				"Code" : {
+					"S3Bucket" : {"Ref": "deploymentBucketName"},
+					"S3Key" : {"Fn::Sub": "lambda/${functionName}.${functionVersion}.zip"}
+				},
+				"FunctionName" : {"Ref": "functionName"},
+				"Handler" : "index.handler",
+				"Role" : {"Ref": "LambdaExecutionRole"},
+				"Runtime" : "nodejs12.x"
+			  }
+		  },
+		"LambdaExecutionRole": {
+			"Type": "AWS::IAM::Role",
+			"Properties": {
+				"RoleName": {"Fn::Sub": "${functionName}-role"},
+				"ManagedPolicyArns":["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"],
+				"AssumeRolePolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Effect": "Allow",
+							"Principal": {
+								"Service": [
+									"lambda.amazonaws.com"
+								]
+							},
+							"Action": [
+								"sts:AssumeRole"
+							]
+						}
+					]
+				}
+			}
+		}
+	},
+	"Outputs": {
+		"Name": {
+			"Value": {
+				"Ref": "LambdaFunction"
+			}
+		},
+		"Arn": {
+			"Value": {
+				"Fn::GetAtt": [
+					"LambdaFunction",
+					"Arn"
+				]
+			}
+		},
+		"Region": {
+			"Value": {
+				"Ref": "AWS::Region"
+			}
+		},
+		"LambdaExecutionRole": {
+			"Value": {
+				"Ref": "LambdaExecutionRole"
+			}
+		}
+	}
+}

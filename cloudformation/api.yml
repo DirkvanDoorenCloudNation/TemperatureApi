@@ -1,0 +1,6 @@
+Resources:
+  ApiGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:     
+      Name: TemperaturesApi
+      

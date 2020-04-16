@@ -1,0 +1,14 @@
+{
+  "name": "averagetemplambda",
+  "version": "1.0.0",
+  "description": "returns average temperature in sfax",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "Dirk van Dooren",
+  "license": "ISC"
+}

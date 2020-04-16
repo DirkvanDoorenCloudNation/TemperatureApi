@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 10
+  build:
+    commands:
+      - ls -la
+      - npm install
+      - npm run-script build --production
+      - cd lambda/averagetempLambda
+      - zip averagetempLambda.0.0.1.zip index.js
+      - cd ../currentTemperatureLambda
+      - zip currenttemperatureLambda.0.0.1.zip index.js
+artifacts:
+  files:
+    - cloudformation/*
+    - lambda/*
+    - mainCloudformation.json
+    - stagingConfiguration.json
+    - productionConfiguration.json

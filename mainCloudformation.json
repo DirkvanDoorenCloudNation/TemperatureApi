@@ -1,7 +1,43 @@
 {
-    "Resources":{
-        "Bucket":{
-            "Type": "AWS::S3::Bucket"
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Stack for credits dashboard",
+    "Parameters": {
+        "stage":{
+            "Type": "String"
+        },
+        "functionVersion":{
+            "Type": "String"
+        },
+        "functionName":{
+            "Type": "String"
+        },
+        "deploymentBucket":{
+            "Type": "String",
+            "Default": "https://frontendpipeline-unpacks3-16ctx7w0ad32g.s3-eu-west-1.amazonaws.com"
+        },
+        "deploymentBucketName":{
+            "Type": "String",
+            "Default": "frontendpipeline-unpacks3-16ctx7w0ad32g"
+        }
+    },
+    "Resources": {
+        "LambdaStack":{
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties":{
+                "TemplateURL": {"Fn::Sub": "${deploymentBucket}/cloudformation/lambda.json"},
+                "Parameters":{
+                    "functionVersion":{"Ref": "functionVersion"},
+                    "functionName":{"Ref": "functionName"},
+                    "stage":{"Ref": "stage"},
+                    "deploymentBucketName":{"Ref": "deploymentBucketName"}
+                } 
+            }
+        },
+        "ApiStack":{
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties":{
+                "TemplateURL": {"Fn::Sub": "${deploymentBucket}/cloudformation/api.yml"}
+            }
         }
     }
 }
