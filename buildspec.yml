@@ -7,8 +7,6 @@ phases:
   build:
     commands:
       - ls -la
-      - npm install
-      - npm run-script build --production
       - cd lambda/averagetempLambda
       - zip averagetempLambda.0.0.1.zip index.js
       - cd ../currentTemperatureLambda
