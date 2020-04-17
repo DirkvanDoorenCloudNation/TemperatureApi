@@ -24,7 +24,7 @@ Resources:
 
   ######## METHODS ##############
   currenttempincovilhaMethod:
-    Type: AWS::ApiGateway::Resource
+    Type: AWS::ApiGateway::Method
     Properties:
       ApiKeyRequired: False
       AuthorizationType: "NONE"
@@ -36,7 +36,7 @@ Resources:
       ResourceId: !Ref currenttempincovilhaResource
       RestApiId: !Ref ApiGateway
   avgtempinsfaxMethod:
-    Type: AWS::ApiGateway::Resource
+    Type: AWS::ApiGateway::Method
     Properties:
       ApiKeyRequired: False
       AuthorizationType: "NONE"
