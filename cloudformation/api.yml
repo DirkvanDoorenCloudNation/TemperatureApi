@@ -54,5 +54,4 @@ Resources:
     Properties: 
       Action: lambda:InvokeFunction
       FunctionName: !Ref lambdaArn
-      Principal:
-        Service: apigateway.amazonaws.com
+      Principal: apigateway.amazonaws.com
