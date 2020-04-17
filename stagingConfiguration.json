@@ -1,7 +1,7 @@
 {
     "Parameters":{
         "stage":"staging",
-        "functionVersion": "0.0.1",
+        "functionVersion": "1.0.0",
         "functionName":"currenttemperatureLambda"
     }
 }

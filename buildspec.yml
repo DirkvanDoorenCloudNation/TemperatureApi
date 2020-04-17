@@ -10,7 +10,7 @@ phases:
       - cd lambda/averagetempLambda
       - zip ../averagetempLambda.0.0.1.zip index.js
       - cd ../currentTemperatureLambda
-      - zip ../currenttemperatureLambda.0.0.1.zip index.js
+      - zip ../currenttemperatureLambda.1.0.0.zip index.js
 artifacts:
   files:
     - cloudformation/*
