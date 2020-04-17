@@ -48,11 +48,11 @@ Resources:
       ResourceId: !Ref avgtempinsfaxResource
       RestApiId: !Ref ApiGateway
     
-    ######Lambda permissions##########
-    LambdaPermissions:
-      Type: AWS::Lambda::Permission
-      Properties: 
-        Action: lambda:InvokeFunction
-        FunctionName: !Ref lambdaArn
-        Principal:
-          Service: apigateway.amazonaws.com
+  ######Lambda permissions##########
+  lambdaPermissions:
+    Type: AWS::Lambda::Permission
+    Properties: 
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref lambdaArn
+      Principal:
+        Service: apigateway.amazonaws.com
