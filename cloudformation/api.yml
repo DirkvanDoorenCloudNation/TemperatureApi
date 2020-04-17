@@ -47,3 +47,12 @@ Resources:
         Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
       ResourceId: !Ref avgtempinsfaxResource
       RestApiId: !Ref ApiGateway
+    
+    ######Lambda permissions##########
+    LambdaPermissions:
+      Type: AWS::Lambda::Permission
+      Properties: 
+        Action: lambda:InvokeFunction
+        FunctionName: !Ref lambdaArn
+        Principal:
+          Service: apigateway.amazonaws.com
