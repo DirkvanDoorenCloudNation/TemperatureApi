@@ -8,8 +8,14 @@
         "functionVersion":{
             "Type": "String"
         },
+        "averageFunctionVersion":{
+            "Type": "String"
+        },
         "functionName":{
             "Type": "String"
+        },
+        "averageFunctionName":{
+            "Type":"String"
         },
         "deploymentBucket":{
             "Type": "String",
@@ -28,6 +34,18 @@
                 "Parameters":{
                     "functionVersion":{"Ref": "functionVersion"},
                     "functionName":{"Ref": "functionName"},
+                    "stage":{"Ref": "stage"},
+                    "deploymentBucketName":{"Ref": "deploymentBucketName"}
+                } 
+            }
+        },
+        "AverageLambdaStack":{
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties":{
+                "TemplateURL": {"Fn::Sub": "${deploymentBucket}/cloudformation/lambda.json"},
+                "Parameters":{
+                    "functionVersion":{"Ref": "averageFunctionVersion"},
+                    "functionName":{"Ref": "averageFunctionName"},
                     "stage":{"Ref": "stage"},
                     "deploymentBucketName":{"Ref": "deploymentBucketName"}
                 } 

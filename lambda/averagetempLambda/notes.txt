@@ -1,0 +1,7 @@
+mongo "mongodb+srv://sfax-sxjvq.mongodb.net/test"  --username dirk --password QQ65eKZzzYYq943O
+show dbs
+use sample_weatherdata
+db.data.find({}).length()
+db.data.find({"position.coordinates.0": { $gt: 40, $lt: 41 }});
+db.data.find({"position.coordinates.1": { $gt: -8, $lt: -7 } });
+db.data.find({"position.coordinates.0": { $gt: 40, $lt: 41 }, "position.coordinates.1": { $gt: -8, $lt: -7 }  })

@@ -2,6 +2,8 @@
     "Parameters":{
         "stage":"staging",
         "functionVersion": "1.0.0",
-        "functionName":"currenttemperatureLambda"
+        "functionName":"currenttemperatureLambda",
+        "averageFunctionName":"averagetempLambda",
+        "averageFunctionVersion": "0.0.3"
     }
 }
