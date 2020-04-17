@@ -10,5 +10,8 @@
     "nodejs"
   ],
   "author": "Dirk van Dooren",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "mongodb": "^3.5.6"
+  }
 }
