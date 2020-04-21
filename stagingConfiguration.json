@@ -4,6 +4,7 @@
         "functionVersion": "1.0.0",
         "functionName":"currenttemperatureLambda",
         "averageFunctionName":"averagetempLambda",
-        "averageFunctionVersion": "1.0.1"
+        "averageFunctionVersion": "1.0.1",
+        "deploymentDate": "Today is 21/04/2020"
     }
 }

@@ -24,6 +24,10 @@
         "deploymentBucketName":{
             "Type": "String",
             "Default": "vopak-testpipeline-unpacks3-v05y51x3vibx"
+        },
+        "deploymentDate":{
+            "Type": "String",
+            "Description": "A pseudo value, changing this will allow you to redeploy api gateway"
         }
     },
     "Resources": {
@@ -57,7 +61,9 @@
                 "TemplateURL": {"Fn::Sub": "${deploymentBucket}/cloudformation/api.yml"},
                 "Parameters":{
                     "averageTemperatureLambda": {"Fn::GetAtt":["AverageLambdaStack", "Outputs.Arn"]},
-                    "currentTemperatureLambda": {"Fn::GetAtt":["LambdaStack", "Outputs.Arn"]}
+                    "currentTemperatureLambda": {"Fn::GetAtt":["LambdaStack", "Outputs.Arn"]},
+                    "deploymentDate": {"Ref": "deploymentDate"},
+                    "stage": {"Ref": "stage"}
                 }
             }
         }

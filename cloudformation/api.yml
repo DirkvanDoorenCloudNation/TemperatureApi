@@ -3,6 +3,10 @@ Parameters:
     Type: String
   currentTemperatureLambda:
     Type: String 
+  stage:
+    Type: String
+  deploymentDate:
+    Type: String
 Resources:
   ########## API GATEWAY ##########
   ApiGateway:
@@ -63,3 +67,13 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref currentTemperatureLambda
       Principal: apigateway.amazonaws.com
+
+  ######### Deployment #################
+  RestApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    Properties: 
+      Description: !Sub "Deployment date: ${deploymentDate}"
+      RestApiId: !Ref ApiGateway
+      StageName: !Ref stage
+
+  
