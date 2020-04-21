@@ -57,7 +57,7 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref averageTemperatureLambda
       Principal: apigateway.amazonaws.com
-   lambdaPermissionsCurrentTemperature:
+  lambdaPermissionsCurrentTemperature:
     Type: AWS::Lambda::Permission
     Properties: 
       Action: lambda:InvokeFunction
