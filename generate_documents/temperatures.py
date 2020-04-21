@@ -68,15 +68,15 @@ for i in range(len(temperatures)):
     # with open(f"{formatdate.format(i+1)}.json", "w+") as file:
     #     json.dump(template, file)
 
-# for the comparison of datetime in
-max_time = '30-06-2019 23:59:59'
-min_time = '01-06-2019 00:00:00'
-max_date = datetime.strptime(max_time, "%d-%m-%Y %H:%M:%S")  + timedelta(hours=2)
-min_date = datetime.strptime(min_time, "%d-%m-%Y %H:%M:%S")  + timedelta(hours=2)
-min_timestamp = int(str(datetime.timestamp(min_date)).split(".")[0])*1000
-max_timestamp = int(str(datetime.timestamp(max_date)).split(".")[0])*1000
-print(min_timestamp)
-print(max_timestamp)
+# for the comparison of datetime. not necessary anymore, nodejs uses Date('')
+# max_time = '30-06-2019 23:59:59'
+# min_time = '01-06-2019 00:00:00'
+# max_date = datetime.strptime(max_time, "%d-%m-%Y %H:%M:%S")  + timedelta(hours=2)
+# min_date = datetime.strptime(min_time, "%d-%m-%Y %H:%M:%S")  + timedelta(hours=2)
+# min_timestamp = int(str(datetime.timestamp(min_date)).split(".")[0])*1000
+# max_timestamp = int(str(datetime.timestamp(max_date)).split(".")[0])*1000
+# print(min_timestamp)
+# print(max_timestamp)
 # use in query gte 1559347200000 lte 1561939199000
 
 with open("total.json", "w+") as file:
