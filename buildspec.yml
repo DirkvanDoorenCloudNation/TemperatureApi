@@ -8,7 +8,7 @@ phases:
     commands:
       - ls -la
       - cd lambda/averagetempLambda
-      - zip -r ../averagetempLambda.1.0.0.zip .
+      - zip -r ../averagetempLambda.1.0.1.zip .
       - cd ../currentTemperatureLambda
       - zip ../currenttemperatureLambda.1.0.0.zip index.js
 artifacts:

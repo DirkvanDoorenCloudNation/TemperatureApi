@@ -14,7 +14,7 @@ exports.handler = async (event, context) =>{
   let query =  {
     "position.coordinates.0": 34.7, 
     "position.coordinates.1": 10.8, 
-    "ts" : { $gte: { $date : 1559347200000} , $lte : { $date : 1561931999000}  } 
+    "ts": {$gte : new Date('2019-06-01'), $lte : new Date('2019-06-30')} 
   };
   try{
       const result  = await collection.find(query);
