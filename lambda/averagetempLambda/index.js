@@ -1,51 +1,34 @@
 "use strict";
 const MongoClient = require('mongodb').MongoClient;
-const MONGODB_URI = process.env.MONGODB_URI; // or Atlas connection string
+const uri = "mongodb+srv://dirk:QQ65eKZzzYYq943O@sfax-sxjvq.mongodb.net?retryWrites=true&w=majority";
 
-let cachedDb = null;
 
-function connectToDatabase (uri) {
-  console.log('=> connect to database');
-
-  if (cachedDb) {
-    console.log('=> using cached database instance');
-    return Promise.resolve(cachedDb);
-  }
-  let auth ={
-        user: "dirk",
-        password: "QQ65eKZzzYYq943O"
-  }
-  return MongoClient.connect(uri, {"auth":auth})
-    .then(db => {
-      cachedDb = db;
-      return cachedDb;
-    });
-}
-
-function queryDatabase (db) {
-  console.log('=> query database');
-
-  return db.collection('items').find({}).toArray()
-    .then(() => { return { statusCode: 200, body: 'success' }; })
-    .catch(err => {
-      console.log('=> an error occurred: ', err);
-      return { statusCode: 500, body: 'error' };
-    });
-}
-
-module.exports.handler = (event, context, callback) => {
+exports.handler = async (event, context) =>{
   context.callbackWaitsForEmptyEventLoop = false;
-
-  console.log('event: ', event);
-
-  connectToDatabase(MONGODB_URI)
-    .then(db => queryDatabase(db))
-    .then(result => {
-      console.log('=> returning result: ', result);
-      callback(null, result);
-    })
-    .catch(err => {
-      console.log('=> an error occurred: ', err);
-      callback(err);
-    });
+  let client = await MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+  console.log("connected");
+  const database = client.db('sample_weatherdata');
+  const collection = database.collection('data');
+  let query =  {"position.coordinates.0": 34.7, "position.coordinates.1": 10.8};
+  try{
+      const result  = await collection.find(query);
+      let count = await result.count();
+      let temperature = 0;
+      await result.forEach(i =>{
+          temperature += i['airTemperature']['value'];
+      });
+      client.close();
+      return {
+        "statusCode": 200,
+        "body": JSON.stringify(temperature/count)
+      };
+  }
+  catch(error){
+      client.close();
+      return{
+        "statusCode": 400,
+        "body": JSON.stringify("bad request")
+      }
+      
+  }
 };

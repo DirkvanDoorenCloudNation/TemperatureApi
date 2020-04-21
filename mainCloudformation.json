@@ -56,7 +56,8 @@
             "Properties":{
                 "TemplateURL": {"Fn::Sub": "${deploymentBucket}/cloudformation/api.yml"},
                 "Parameters":{
-                    "lambdaArn": {"Fn::GetAtt":["LambdaStack", "Outputs.Arn"]}
+                    "averageTemperatureLambda": {"Fn::GetAtt":["AverageLambdaStack", "Outputs.Arn"]},
+                    "currentTemperatureLambda": {"Fn::GetAtt":["LambdaStack", "Outputs.Arn"]}
                 }
             }
         }

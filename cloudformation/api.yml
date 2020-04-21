@@ -1,6 +1,8 @@
 Parameters:
-  lambdaArn: 
+  averageTemperatureLambda: 
     Type: String
+  currentTemperatureLambda:
+    Type: String 
 Resources:
   ########## API GATEWAY ##########
   ApiGateway:
@@ -32,7 +34,7 @@ Resources:
       Integration: 
         IntegrationHttpMethod: POST
         Type: AWS_PROXY 
-        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${currentTemperatureLambda}/invocations
       ResourceId: !Ref currenttempincovilhaResource
       RestApiId: !Ref ApiGateway
   avgtempinsfaxMethod:
@@ -44,14 +46,20 @@ Resources:
       Integration: 
         IntegrationHttpMethod: POST
         Type: AWS_PROXY 
-        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${averageTemperatureLambda}/invocations
       ResourceId: !Ref avgtempinsfaxResource
       RestApiId: !Ref ApiGateway
     
   ######Lambda permissions##########
-  lambdaPermissions:
+  lambdaPermissionsAverageTemperature:
     Type: AWS::Lambda::Permission
     Properties: 
       Action: lambda:InvokeFunction
-      FunctionName: !Ref lambdaArn
+      FunctionName: !Ref averageTemperatureLambda
+      Principal: apigateway.amazonaws.com
+   lambdaPermissionsCurrentTemperature:
+    Type: AWS::Lambda::Permission
+    Properties: 
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref currentTemperatureLambda
       Principal: apigateway.amazonaws.com
