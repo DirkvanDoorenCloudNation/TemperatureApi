@@ -4,4 +4,4 @@ use sample_weatherdata
 db.data.find({}).length()
 db.data.find({"position.coordinates.0": { $gt: 40, $lt: 41 }});
 db.data.find({"position.coordinates.1": { $gt: -8, $lt: -7 } });
-db.data.find({"position.coordinates.0": { $gt: 40, $lt: 41 }, "position.coordinates.1": { $gt: -8, $lt: -7 }  })
+db.data.find({"position.coordinates.0": { $gt: 34, $lt: 36 }, "position.coordinates.1": { $gt: 10, $lt: 11 }  })

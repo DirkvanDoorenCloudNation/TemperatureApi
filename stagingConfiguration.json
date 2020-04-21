@@ -4,6 +4,6 @@
         "functionVersion": "1.0.0",
         "functionName":"currenttemperatureLambda",
         "averageFunctionName":"averagetempLambda",
-        "averageFunctionVersion": "0.0.6"
+        "averageFunctionVersion": "1.0.0"
     }
 }

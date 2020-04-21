@@ -1,0 +1,266 @@
+Parameters: 
+  applicationName:
+    Type: String
+    Default: temperatureApi 
+  rootCloudformationName:
+    Type: String
+    Default: mainCloudformation.json
+  RepoOwner:
+    Type: String
+    Default: DirkvanDoorenCloudNation
+  ExistingSourceRepoName: 
+    Type: String
+    Default: TemperatureAPI
+  TriggerBranch:
+    Type: String
+    Default: master  
+Resources:
+  unpackS3:
+    Type: AWS::S3::Bucket
+  artifactStore:
+    Type: AWS::S3::Bucket
+  codeBuildServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub codebuildservicerole-${applicationName}
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+              - codebuild.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: !Sub codebuildpolicy-${applicationName}
+          PolicyDocument: {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "CloudWatchLogsPolicy",
+                "Effect": "Allow",
+                "Action": [
+                  "logs:CreateLogGroup",
+                  "logs:CreateLogStream",
+                  "logs:PutLogEvents"
+                ],
+                "Resource": [
+                  "*"
+                ]
+              },
+              {
+                "Sid": "s3Permissions",
+                "Effect": "Allow",
+                "Action": [
+                  "s3:List*",
+                  "s3:Get*",
+                  "s3:GetObject",
+                  "s3:GetObjectVersion",
+                  "s3:PutObject",
+                  "s3:GetBucketAcl",
+                  "s3:GetBucketLocation"
+                ],
+                "Resource": [
+                  {"Fn::Join": ["", [{"Fn::GetAtt": ["unpackS3", "Arn"]}]]},
+                  {"Fn::Join": ["", [{"Fn::GetAtt": ["artifactStore", "Arn"]}]]},
+                  {"Fn::Join": ["", [{"Fn::GetAtt": ["unpackS3", "Arn"]}, "/*"]]},
+                  {"Fn::Join": ["", [{"Fn::GetAtt": ["artifactStore", "Arn"]}, "/*"]]}
+                ]
+              }
+            ]
+          }
+  codeBuild:
+    Type: AWS::CodeBuild::Project
+    Properties: 
+      Artifacts: 
+        Type: CODEPIPELINE
+      Description: "codebuild for api-gateway"
+      Environment: 
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/amazonlinux2-x86_64-standard:2.0	
+        Type: LINUX_CONTAINER
+      Name: !Ref applicationName
+      ServiceRole: !GetAtt codeBuildServiceRole.Arn
+      Source: 
+        Type: CODEPIPELINE
+  cloudFormationRole:                                                         # this role basically deploys your application. It is hard to specify what it should or should not be allowed to do, therefore it has admin rights now.
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub cloudFormationRole-${applicationName}
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal: 
+              Service:
+                - codepipeline.amazonaws.com
+                - cloudformation.amazonaws.com
+              AWS:
+                - !GetAtt codepipelineRole.Arn
+            Action:
+            - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: !Sub cloudFormationPolicy-${applicationName}
+          PolicyDocument: {
+              "Version": "2012-10-17",
+              "Statement":[
+                {
+                  "Action": "*",
+                  "Resource": "*",
+                  "Effect": "Allow"
+                }
+              ]
+          }
+  codepipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub codepipelineRole-${applicationName}
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal: 
+              Service: 
+                - codepipeline.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: !Sub codepipelinepolicy-${applicationName}
+          PolicyDocument:
+            {
+              "Version": "2012-10-17",
+              "Statement":[
+                {
+                  "Action": [
+                      "codebuild:BatchGetBuilds",
+                      "codebuild:StartBuild"
+                  ],
+                  "Resource": "*",
+                  "Effect": "Allow"
+                },
+                {
+                  "Action": [
+                      "cloudformation:CreateStack",
+                      "cloudformation:DeleteStack",
+                      "cloudformation:DescribeStacks",
+                      "cloudformation:UpdateStack",
+                      "cloudformation:CreateChangeSet",
+                      "cloudformation:DeleteChangeSet",
+                      "cloudformation:DescribeChangeSet",
+                      "cloudformation:ExecuteChangeSet",
+                      "cloudformation:SetStackPolicy",
+                      "cloudformation:ValidateTemplate",
+                      "iam:PassRole"
+                  ],
+                  "Resource": "*",
+                  "Effect": "Allow"
+                },
+                {
+                  "Action":[
+                    "s3:*"
+                  ],
+                 "Resource": [
+                    {"Fn::Join": ["", [{"Fn::GetAtt": ["unpackS3", "Arn"]}]]},
+                    {"Fn::Join": ["", [{"Fn::GetAtt": ["artifactStore", "Arn"]}]]},
+                    {"Fn::Join": ["", [{"Fn::GetAtt": ["unpackS3", "Arn"]}, "/*"]]},
+                    {"Fn::Join": ["", [{"Fn::GetAtt": ["artifactStore", "Arn"]}, "/*"]]}
+                  ],
+                  "Effect": "Allow"
+                }
+              ]
+            }
+  codepipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      ArtifactStore: 
+        Type: S3
+        Location: !Ref artifactStore
+      RoleArn: !GetAtt codepipelineRole.Arn
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: CodeCommitVars
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Version: "1"
+                Provider: GitHub
+              Configuration:
+                Owner: !Ref RepoOwner
+                Repo: !Ref ExistingSourceRepoName 
+                Branch: !Ref TriggerBranch
+                OAuthToken: tobecontinued
+                PollForSourceChanges: false
+              OutputArtifacts:
+                - Name: sourceCode
+              RunOrder: 1
+        - Name: Build
+          Actions:
+            - Name: Codebuild 
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: 1
+              InputArtifacts:
+                - Name: sourceCode
+              OutputArtifacts:
+                - Name: BuildArtifact
+              Configuration:
+                ProjectName: !Ref codeBuild
+        - Name: DeployToS3                                                  # this step facilitates as a artifact store. if you have a lambda or cloudformation template you need to reference. 
+          Actions:                                                          # you can reference this bucket as a source
+            - Name: DeployToS3Bucket
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: S3
+                Version: 1
+              InputArtifacts:
+                - Name: BuildArtifact
+              Configuration:
+                BucketName: !Ref unpackS3
+                Extract: True
+        - Name: Dev
+          Actions:
+            - Name: Cloudformation
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CloudFormation
+                Version: 1
+              InputArtifacts:
+                - Name: BuildArtifact
+              Configuration:
+                ActionMode: REPLACE_ON_FAILURE                                                              #change this value to CREATE_UPDATE after first deployment
+                TemplatePath: !Sub "BuildArtifact::${rootCloudformationName}"                                      #specify your main cloudformation template, it is best practice to create modular cloudformation templates
+                Capabilities: CAPABILITY_NAMED_IAM,CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND                    # if you however have isolated infrastructures, please use seperate deploy steps for those.
+                TemplateConfiguration: BuildArtifact::stagingConfiguration.json
+                StackName: !Sub ${applicationName}-Dev
+                RoleArn: !GetAtt cloudFormationRole.Arn
+        - Name: Approval
+          Actions:
+            - Name: Approve-Change
+              ActionTypeId:
+                Category: Approval
+                Owner: AWS
+                Provider: Manual
+                Version: 1
+        - Name: Prd
+          Actions:
+            - Name: Cloudformation
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CloudFormation
+                Version: 1
+              InputArtifacts:
+                - Name: BuildArtifact
+              Configuration:
+                ActionMode: REPLACE_ON_FAILURE                                                              #change this value to CREATE_UPDATE after first deployment
+                TemplatePath: !Sub "BuildArtifact::${rootCloudformationName}"                                      #specify your main cloudformation template, it is best practice to create modular cloudformation templates
+                Capabilities: CAPABILITY_NAMED_IAM,CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND                    # if you however have isolated infrastructures, please use seperate deploy steps for those.
+                TemplateConfiguration: BuildArtifact::productionConfiguration.json
+                StackName: !Sub ${applicationName}-Dev
+                RoleArn: !GetAtt cloudFormationRole.Arn
