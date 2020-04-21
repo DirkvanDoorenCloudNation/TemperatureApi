@@ -1,9 +1,12 @@
 "use strict";
 const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://dirk:QQ65eKZzzYYq943O@sfax-sxjvq.mongodb.net?retryWrites=true&w=majority";
+let username = process.env.USERNAME
+let password = process.env.password
+const uri = "mongodb+srv://"+ username+ ":"+ password + "@sfax-sxjvq.mongodb.net?retryWrites=true&w=majority";
 
 
 exports.handler = async (event, context) =>{
+  
   context.callbackWaitsForEmptyEventLoop = false;
   let client = await MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
   console.log("connected");
